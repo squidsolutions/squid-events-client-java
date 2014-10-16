@@ -1,0 +1,250 @@
+package com.squid.events.client;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
+import javax.xml.bind.DatatypeConverter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squid.events.commons.Signature;
+import com.squid.events.model.EventModel;
+
+/**
+ * main class to publish event to a queue
+ * 
+ * @author sergefantino
+ * 
+ */
+public class EventPublisher {
+
+    static final Logger logger = LoggerFactory.getLogger(EventPublisher.class);
+
+    private Config config;
+
+    private LinkedBlockingQueue<EventModel> queue = null;
+    
+    private boolean go = true;
+    
+    private int max_queue = 0;
+    private long min_http_ellapse = Long.MAX_VALUE;
+    private long max_http_ellapse = Long.MIN_VALUE;
+    private long total_http_ellapse = 0;
+    private int count_http_requests = 0;
+    
+    private AtomicLong count = new AtomicLong(0);
+    private AtomicLong sendSuccess = new AtomicLong(0);
+    private AtomicLong sendFailed = new AtomicLong(0);
+
+    public EventPublisher() {
+        this(new Config());
+    }
+
+    public EventPublisher(Config config) {
+        this.config = config;
+        this.queue = new LinkedBlockingQueue<EventModel>(config.getQueueLimit());
+    }
+    
+    /**
+     * shutdown the publisher: it will stop accepting new events
+     */
+    public void shutdown() {
+        this.go = false;
+    }
+
+    public boolean send(EventModel event) {
+        if (go) {
+            return sendPut(event);
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean sendPut(EventModel event) {
+        try {
+            queue.put(event);
+            sendSuccess.incrementAndGet();
+            return true;
+        } catch (InterruptedException e) {
+            sendFailed.incrementAndGet();
+            return false;
+        }
+    }
+
+    public boolean sendOffer(EventModel event) {
+        try {
+            if (!queue.offer(event,100,TimeUnit.MILLISECONDS)) {
+                // failed
+                sendFailed.incrementAndGet();
+                return false;
+            } else {
+                sendSuccess.incrementAndGet();
+                return true;
+            }
+        } catch (InterruptedException e) {
+            sendFailed.incrementAndGet();
+            return false;
+        }
+    }
+    
+    public long getStats() {
+        return count.get();
+    }
+
+    /**
+     * flush the event queue of all its content
+     */
+    public void flush() {
+        logger.info("flush the queue");
+        // flush send all the remaining events in one http call
+        int size = queue.size();
+        int i=0;
+        while (!queue.isEmpty()) {
+            List<EventModel> copy = new ArrayList<>(config.getBatchSize());
+            for (int j=0 ;i < size && j <config.getBatchSize(); i++,j++) {
+                copy.add(queue.poll());
+            }
+            if (!copy.isEmpty()) {
+                sendBatchMessage(copy);
+            }
+        }
+        // display stats
+        if (count_http_requests==0) {
+            logger.info("http stats: count=0");
+        } else {
+            double avg = count_http_requests>0?(total_http_ellapse/count_http_requests):0;
+            logger.info("http stats: count="+count_http_requests+" min="+min_http_ellapse+"ms; max="+max_http_ellapse+"ms; avg="+avg+"ms; total="+total_http_ellapse+"ms");
+        }
+        logger.info("queue stats: max size = "+max_queue);
+        logger.info("send():success="+sendSuccess.get()+"; failed="+sendFailed.get());
+    }
+    
+    public void poll() {
+        try {
+            List<EventModel> batch = new ArrayList<>(config.getBatchSize());
+            if (max_queue <queue.size()) {
+                max_queue = queue.size();
+                logger.info("queue hits new max = "+max_queue);
+            }
+            while (true) {
+                EventModel event = queue.poll(1,TimeUnit.SECONDS);
+                if (event!=null) {
+                    batch.add(event);
+                    if (batch.size()>=config.getBatchSize()) {
+                        break;//enought to push
+                    }
+                } else {
+                    break;// send the batch if any, and return to the flusher loop
+                }
+            }
+            if (!batch.isEmpty()) {
+                sendBatchMessage(batch);
+            }
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    private void sendBatchMessage(List<EventModel> events) {
+        ObjectMapper jackson = new ObjectMapper();
+        try {
+            byte[] raw = jackson.writeValueAsBytes(events);
+            String data = DatatypeConverter.printBase64Binary(raw);
+            String signature = Signature.calculateRFC2104HMAC(data,
+                    config.getSecretKey());
+            int response = doPost(config.getEndpoint(), config.getAppKey(),
+                    "event-retrieval-1.0", signature, data);
+            logger.info("sent "+events.size()+" events to API server");
+            logger.info("API server replied with " + response);
+            count.addAndGet(events.size());
+        } catch (JsonProcessingException e) {
+            // too bad
+            logger.info("cannot write events as JSON: "
+                    + e.getLocalizedMessage());
+        }
+    }
+
+    private int doPost(String endpoint, String appKey, String schema,
+            String signature, String data) {
+        URL url;
+        HttpURLConnection connection = null;
+        int returnCode = -1;
+        try {
+            // Create connection
+            String x = endpoint+"?"+"key="+URLEncoder.encode(appKey, "UTF-8")+"&schema="+URLEncoder.encode(schema, "UTF-8")+"&sig="+URLEncoder.encode(signature, "UTF-8");
+            url = new URL(x);
+            //
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            // connection.setRequestProperty("Content-Type",
+            // "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Content-Type",
+                    "application/json; charset=utf-8");
+
+            connection.setRequestProperty("Content-Length",
+                    "" + Integer.toString(data.getBytes().length));
+            // connection.setRequestProperty("Content-Language", "en-US");
+
+            connection.setUseCaches(false);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            // Send request
+            DataOutputStream wr = new DataOutputStream(
+                    connection.getOutputStream());
+            wr.writeBytes(data);
+            wr.flush();
+            wr.close();
+
+            // Get Response
+            long start = System.currentTimeMillis();
+            returnCode = connection.getResponseCode();
+            InputStream is = connection.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            String line;
+            StringBuffer response = new StringBuffer();
+            while ((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
+            long stop = System.currentTimeMillis();
+            //
+            long ellapse = stop-start;
+            logger.info("http replied in "+ellapse+"ms");
+            min_http_ellapse = Math.min(min_http_ellapse, ellapse);
+            max_http_ellapse = Math.max(max_http_ellapse, ellapse);
+            total_http_ellapse += ellapse;
+            count_http_requests++;
+            //
+            return returnCode;//response.toString();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            return returnCode;
+
+        } finally {
+
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
+}
