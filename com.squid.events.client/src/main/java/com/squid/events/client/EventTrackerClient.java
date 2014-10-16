@@ -16,10 +16,13 @@ public class EventTrackerClient {
      */
     public EventTrackerClient(Config config) {
         publisher = new EventPublisher(config);
-        Flusher flusher = new Flusher(publisher);
         flushers = new ArrayList<>();
-        flushers.add(flusher);
-        flusher.start();
+        int flusherCount = Math.max(1, config.getMaxFlusherCount());
+        for (int i=0;i<flusherCount;i++) {
+            Flusher flusher = new Flusher(publisher);
+            flushers.add(flusher);
+            flusher.start();
+        }
     }
     
     public void send(EventModel event) {
