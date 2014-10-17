@@ -21,6 +21,7 @@ public class EventModel extends HashMap<String, Object> {
     public static final String EventType = "xx:eventType";
     public static final String EventDate = "xx:eventDate";
     public static final String EventTimeZone = "xx:eventTimeZone";
+    public static final String ServerIP = "xx:serverIP";
     
     public EventModel() {
         // TODO Auto-generated constructor stub
@@ -85,6 +86,16 @@ public class EventModel extends HashMap<String, Object> {
      */
     public EventModel withEventDate(long date) {
         super.put(EventDate, date);
+        return this;
+    }
+    
+    /**
+     * the serverIP; this is optional, the Tracker Server can add this latter
+     * @param IP
+     * @return
+     */
+    public EventModel withServerIP(String IP) {
+        super.put(ServerIP, IP);
         return this;
     }
 

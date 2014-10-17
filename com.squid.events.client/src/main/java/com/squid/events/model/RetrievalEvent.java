@@ -4,7 +4,7 @@ public class RetrievalEvent extends UsageEvent {
 
     private static final long serialVersionUID = 3263181299164044911L;
     
-    public static final String retrievSchema = "retriev:pub";
+    public static final String retrievSchema = "retriev:pub_1.0";
     
     public static final String retrievEventType = "retriev";
     

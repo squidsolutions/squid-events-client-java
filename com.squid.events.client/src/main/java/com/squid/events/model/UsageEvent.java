@@ -4,7 +4,6 @@ public class UsageEvent extends EventModel {
 
     private static final long serialVersionUID = -216872748521850295L;
     
-    public static final String usageServerIP = "ux:serverIP";
     public static final String usageClientIP = "ux:clientIP";
     public static final String usageSessionID = "ux:sessionID";
     public static final String usageUserID = "ux:userID";
@@ -15,16 +14,6 @@ public class UsageEvent extends EventModel {
 
     public UsageEvent(String schemaName, String eventType) {
         super(schemaName, eventType);
-    }
-    
-    /**
-     * the serverIP; this is optional, the Tracker Server can add this latter
-     * @param IP
-     * @return
-     */
-    public UsageEvent withServerIP(String IP) {
-        super.put(usageServerIP, IP);
-        return this;
     }
 
     /**

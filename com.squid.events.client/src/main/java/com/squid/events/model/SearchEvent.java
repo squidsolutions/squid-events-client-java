@@ -7,7 +7,7 @@ public class SearchEvent extends UsageEvent {
     private static final long serialVersionUID = -5194563972531281038L;
     
 
-    public static final String searchSchema = "search:pub";
+    public static final String searchSchema = "search:pub_1.0";
     
     /**
      * recall event = result of a search query
