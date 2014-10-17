@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squid.events.model.EventModel;
 import com.squid.events.model.RetrievalEvent;
-import com.squid.events.model.SearchEvent;
 
 public class TestEventModel {
     
@@ -30,11 +29,11 @@ public class TestEventModel {
                 .withContentType("article")
                 .withDisplayFormat("PDF")
                 .withEntitlement("myUnivertsity")
-                .withServerIP("127.0.0.1")
                 .withClientIP("127.0.0.1")
                 .withSessionID("1234")
                 .withUserID("sergio")
-                .withPageViewURL("http://something/somepage");
+                .withPageViewURL("http://something/somepage")
+                .withServerIP("127.0.0.1");
             String test = jackson.writeValueAsString(event);
             System.out.println(test);
         } catch (JsonProcessingException e) {

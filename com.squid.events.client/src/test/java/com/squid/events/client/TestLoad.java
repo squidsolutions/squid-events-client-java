@@ -1,8 +1,6 @@
 package com.squid.events.client;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -12,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.squid.events.client.Config;
-import com.squid.events.client.EventPublisher;
-import com.squid.events.client.Flusher;
 import com.squid.events.model.EventModel;
 import com.squid.events.model.RetrievalEvent;
 
@@ -111,11 +107,11 @@ public class TestLoad {
             .withContentType("article")
             .withDisplayFormat("PDF")
             .withEntitlement("myUnivertsity")
-            .withServerIP("127.0.0.1")
             .withClientIP("127.0.0.1")
             .withSessionID(userID+"_"+id)
             .withUserID(userID)
-            .withPageViewURL("http://something/somepage");
+            .withPageViewURL("http://something/somepage")
+            .withServerIP("127.0.0.1");
         }
         
     }
