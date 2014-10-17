@@ -1,6 +1,7 @@
 package com.squid.events.client;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -14,6 +15,7 @@ import com.squid.events.client.Config;
 import com.squid.events.client.EventPublisher;
 import com.squid.events.client.Flusher;
 import com.squid.events.model.EventModel;
+import com.squid.events.model.RetrievalEvent;
 
 public class TestLoad {
 
@@ -35,23 +37,21 @@ public class TestLoad {
     private CountDownLatch complete;
     
     // experiment
-    protected int eventsPerSecond = 10;
+    protected int eventsPerSecond = 10;// throughput
     protected int numberOfProducers = 50;
-    protected int experieceDuration = 60*1;// 5 minutes
+    protected int experieceDuration = 60*1;// duration in seconds
     
     class User extends Thread {
         
         private String userID;
-        private EventTrackerClient client;
         private int size;
         
         protected int count = 0;
         protected long total = 0;
         protected long max = 0;
 
-        public User(String userID, EventTrackerClient client, int size) {
+        public User(String userID, int size) {
             this.userID = userID;
-            this.client = client;
             this.size = size;
         }
         
@@ -64,7 +64,7 @@ public class TestLoad {
                 //synchronized (waiter) {
                     for (int i=0;i<size;i++) {
                         long start = System.currentTimeMillis();
-                        client.send(genEvent(count));
+                        EventTracker.send(genEvent(count));
                         long stop = System.currentTimeMillis();
                         count++;
                         long ellapse = stop-start;
@@ -94,7 +94,8 @@ public class TestLoad {
         }
         
         private EventModel genEvent(int id) {
-            EventModel event = new EventModel();
+            /*
+            EventModel event = new EventMode();
             event.appId = appKey;
             event.eventType = "retrieval";
             event.serverIp = "127.0.0.2";
@@ -104,6 +105,17 @@ public class TestLoad {
             event.url = "http://something/somepage";
             event.userId = userID;
             return event;
+            */
+            return new RetrievalEvent()
+            .withContentOwnerID("myUniversity")
+            .withContentType("article")
+            .withDisplayFormat("PDF")
+            .withEntitlement("myUnivertsity")
+            .withServerIP("127.0.0.1")
+            .withClientIP("127.0.0.1")
+            .withSessionID(userID+"_"+id)
+            .withUserID(userID)
+            .withPageViewURL("http://something/somepage");
         }
         
     }
@@ -116,15 +128,16 @@ public class TestLoad {
         config.setSecretKey(secretKey);
         //
         config.setMaxFlusherCount(5);
-        EventTrackerClient client = new EventTrackerClient(config);
+        //EventTrackerClient client = new EventTrackerClient(config);
+        EventTracker.initialize(config);
         //
         int threadCount = numberOfProducers;
         int requestCount = experieceDuration*eventsPerSecond/numberOfProducers;
         start = new CountDownLatch(1);
         complete = new CountDownLatch(threadCount);
-        List<User> users = new ArrayList<>(threadCount);
+        List<User> users = new ArrayList<User>(threadCount);
         for (int i=0;i<threadCount;i++) {
-            User user = new User("user"+i,client,requestCount);
+            User user = new User("user"+i,requestCount);
             users.add(user);
             user.start();
         }
@@ -133,11 +146,13 @@ public class TestLoad {
         start.countDown();// start all users
         complete.await();
         //
-        client.shutdown();
+        EventTracker.shutdown();
         //
         long stopTime = System.currentTimeMillis();
         long ellapse = (stopTime-startTime);
-        logger.info("published "+client.getStats()+" events in "+ellapse+"ms => "+(threadCount*requestCount)/(ellapse/1000)+"event/s");
+        Stats stats = EventTracker.getStats();
+        logger.info("published "+stats.getSuccess()+" events in "+ellapse+"ms => "+(threadCount*requestCount)/(ellapse/1000)+"event/s");
+        logger.info("failed to publish: "+stats.getFailure()+" events");
         logger.info("submitted events count="+threadCount*requestCount);
         //
         int count = 0;
@@ -150,7 +165,7 @@ public class TestLoad {
         }
         logger.info("send() stats: count="+count+"; total="+total+"; avg="+total/count+"ms; max="+max+"ms");
         //
-        Assert.assertEquals(threadCount*requestCount,client.getStats());
+        Assert.assertEquals(threadCount*requestCount,stats.getSuccess());
     }
 
 }
