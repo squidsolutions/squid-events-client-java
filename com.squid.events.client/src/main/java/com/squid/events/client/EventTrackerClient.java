@@ -16,7 +16,7 @@ public class EventTrackerClient {
      */
     public EventTrackerClient(Config config) {
         publisher = new EventPublisher(config);
-        flushers = new ArrayList<>();
+        flushers = new ArrayList<Flusher>();
         int flusherCount = Math.max(1, config.getMaxFlusherCount());
         for (int i=0;i<flusherCount;i++) {
             Flusher flusher = new Flusher(publisher);
@@ -25,16 +25,16 @@ public class EventTrackerClient {
         }
     }
     
+    public boolean isRunning() {
+        return publisher.isRunning();
+    }
+    
     public void send(EventModel event) {
         publisher.send(event);
     }
     
-    public long getStats() {
-        if (publisher!=null) {
-            return publisher.getStats();
-        } else {
-            return -1;
-        }
+    public Stats getStats() {
+        return publisher.getStats();
     }
     
     /**
@@ -45,11 +45,13 @@ public class EventTrackerClient {
      * 
      */
     public void shutdown() {
-        publisher.shutdown();
-        for (Flusher flusher : flushers) {
-            flusher.shutdown();
+        if (publisher.isRunning()) {
+            publisher.shutdown();// stop accepting new events
+            for (Flusher flusher : flushers) {
+                flusher.shutdown();
+            }
+            publisher.flush();
         }
-        publisher.flush();
     }
 
 }

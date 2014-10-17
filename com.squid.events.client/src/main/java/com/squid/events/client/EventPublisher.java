@@ -11,16 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-
-import javax.xml.bind.DatatypeConverter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squid.events.commons.Base64;
 import com.squid.events.commons.Signature;
 import com.squid.events.model.EventModel;
 
@@ -46,6 +44,8 @@ public class EventPublisher {
     private long total_http_ellapse = 0;
     private int count_http_requests = 0;
     
+    private long startTime = 0;
+    
     private AtomicLong count = new AtomicLong(0);
     private AtomicLong sendSuccess = new AtomicLong(0);
     private AtomicLong sendFailed = new AtomicLong(0);
@@ -57,10 +57,19 @@ public class EventPublisher {
     public EventPublisher(Config config) {
         this.config = config;
         this.queue = new LinkedBlockingQueue<EventModel>(config.getQueueLimit());
+        this.startTime = System.currentTimeMillis();
     }
     
     /**
-     * shutdown the publisher: it will stop accepting new events
+     * Check if the publisher is running. Will return false once you call shutdown.
+     * @return
+     */
+    public boolean isRunning() {
+        return this.go;
+    }
+    
+    /**
+     * shutdown the publisher: it will stop accepting new events right away
      */
     public void shutdown() {
         this.go = false;
@@ -68,26 +77,31 @@ public class EventPublisher {
 
     public boolean send(EventModel event) {
         if (go) {
-            return sendPut(event);
+            if (config.getSendTimeout()<=0) {
+                // if the queue is full, fail
+                return sendOffer(event);
+            } else {
+                // wait as much as timeout
+                return sendOffer(event, config.getSendTimeout());
+            }
         } else {
             return false;
         }
     }
     
-    public boolean sendPut(EventModel event) {
-        try {
-            queue.put(event);
+    protected boolean sendOffer(EventModel event) {
+        if (queue.offer(event)) {
             sendSuccess.incrementAndGet();
             return true;
-        } catch (InterruptedException e) {
+        } else {
             sendFailed.incrementAndGet();
             return false;
         }
     }
 
-    public boolean sendOffer(EventModel event) {
+    protected boolean sendOffer(EventModel event, long timeout) {
         try {
-            if (!queue.offer(event,100,TimeUnit.MILLISECONDS)) {
+            if (!queue.offer(event, timeout, TimeUnit.MILLISECONDS)) {
                 // failed
                 sendFailed.incrementAndGet();
                 return false;
@@ -101,8 +115,9 @@ public class EventPublisher {
         }
     }
     
-    public long getStats() {
-        return count.get();
+    public Stats getStats() {
+        long now = System.currentTimeMillis();
+        return new Stats(this.sendSuccess.get(),this.sendFailed.get(),now-startTime);
     }
 
     /**
@@ -114,7 +129,7 @@ public class EventPublisher {
         int size = queue.size();
         int i=0;
         while (!queue.isEmpty()) {
-            List<EventModel> copy = new ArrayList<>(config.getBatchSize());
+            List<EventModel> copy = new ArrayList<EventModel>(config.getBatchSize());
             for (int j=0 ;i < size && j <config.getBatchSize(); i++,j++) {
                 copy.add(queue.poll());
             }
@@ -135,7 +150,7 @@ public class EventPublisher {
     
     public void poll() {
         try {
-            List<EventModel> batch = new ArrayList<>(config.getBatchSize());
+            List<EventModel> batch = new ArrayList<EventModel>(config.getBatchSize());
             if (max_queue <queue.size()) {
                 max_queue = queue.size();
                 logger.info("queue hits new max = "+max_queue);
@@ -164,7 +179,7 @@ public class EventPublisher {
         ObjectMapper jackson = new ObjectMapper();
         try {
             byte[] raw = jackson.writeValueAsBytes(events);
-            String data = DatatypeConverter.printBase64Binary(raw);
+            String data = Base64.printBase64Binary(raw);
             String signature = Signature.calculateRFC2104HMAC(data,
                     config.getSecretKey());
             int response = doPost(config.getEndpoint(), config.getAppKey(),
@@ -191,14 +206,11 @@ public class EventPublisher {
             //
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
-            // connection.setRequestProperty("Content-Type",
-            // "application/x-www-form-urlencoded");
             connection.setRequestProperty("Content-Type",
                     "application/json; charset=utf-8");
 
             connection.setRequestProperty("Content-Length",
                     "" + Integer.toString(data.getBytes().length));
-            // connection.setRequestProperty("Content-Language", "en-US");
 
             connection.setUseCaches(false);
             connection.setDoInput(true);

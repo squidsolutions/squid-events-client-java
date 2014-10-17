@@ -24,12 +24,14 @@ public class Flusher extends Thread {
     }
     
     public void shutdown() {
-        this.go = false;
-        try {
-            join();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (go) {
+            this.go = false;
+            try {
+                join();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -2,7 +2,7 @@ package com.squid.events.client;
 
 public class Config {
     
-    private String endpoint = "https://events.squidsolutions.com/tracker/api/v1.0";
+    private String endpoint = "https://events.tracker.squidanalytics.com/tracker/api/v1.0";
     
     private String appKey = "null";
     
@@ -13,6 +13,9 @@ public class Config {
     private int queueLimit = 10000;
     
     private int batchSize = 100;
+    
+    // default timeout for the send() method is 10ms
+    private int sendTimeout = 10;
     
     public Config() {
         // TODO Auto-generated constructor stub
@@ -79,6 +82,14 @@ public class Config {
 
     public void setBatchSize(int batchSize) {
         this.batchSize = batchSize;
+    }
+
+    public int getSendTimeout() {
+        return sendTimeout;
+    }
+
+    public void setSendTimeout(int sendTimeout) {
+        this.sendTimeout = sendTimeout;
     }
     
 }
