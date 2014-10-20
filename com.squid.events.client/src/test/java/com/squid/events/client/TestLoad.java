@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.squid.events.client.Config;
 import com.squid.events.model.EventModel;
 import com.squid.events.model.RetrievalEvent;
+import com.squid.events.model.RetrievalModel;
 
 public class TestLoad {
 

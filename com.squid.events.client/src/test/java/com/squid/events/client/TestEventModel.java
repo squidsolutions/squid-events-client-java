@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squid.events.model.ArticleModel;
 import com.squid.events.model.EventModel;
 import com.squid.events.model.RetrievalEvent;
+import com.squid.events.model.RetrievalModel;
 
 public class TestEventModel {
     
@@ -65,7 +66,7 @@ public class TestEventModel {
             String test = jackson.writeValueAsString(event);
             System.out.println(test);
             EventModel check = jackson.readValue(test, EventModel.class);
-            Object xxx = check.get(RetrievalEvent.retrievContentReferenceArticle);
+            Object xxx = check.get(RetrievalModel.retrievContentReferenceArticle);
             Assert.assertNotNull(xxx);
         } catch (JsonProcessingException e) {
             // TODO Auto-generated catch block
