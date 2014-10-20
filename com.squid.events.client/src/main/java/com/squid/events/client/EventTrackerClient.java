@@ -13,6 +13,7 @@ public class EventTrackerClient {
     /**
      * create a new Event Tracker client using the given configuration.
      * @param config
+     * @throws IllegalStateException if the configuration is not valid
      */
     public EventTrackerClient(Config config) {
         publisher = new EventPublisher(config);

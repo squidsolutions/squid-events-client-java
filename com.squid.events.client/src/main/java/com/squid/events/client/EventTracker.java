@@ -27,6 +27,8 @@ public class EventTracker {
      * This method is thread-safe
      * @param config
      *          the configuration object. Note that the default configuration is production ready.
+     *          
+     * @throws IllegalStateException if the configuration is not valid
      */
     public static synchronized void initialize(Config config) {
         if (client==null) {

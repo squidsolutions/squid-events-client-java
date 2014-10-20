@@ -49,17 +49,38 @@ public class EventPublisher {
     private AtomicLong count = new AtomicLong(0);
     private AtomicLong sendSuccess = new AtomicLong(0);
     private AtomicLong sendFailed = new AtomicLong(0);
-
-    public EventPublisher() {
-        this(new Config());
-    }
-
+    
+    /**
+     * create the EventPublisher with this configuration.
+     * The EventPublisher will check if the configuration is valid. If not it will throw a IllegalStateException.
+     * 
+     * @param config
+     * @throws IllegalStateException if the configuration is not valid
+     */
     public EventPublisher(Config config) {
+        check(config);
         this.config = config;
         this.queue = new LinkedBlockingQueue<EventModel>(config.getQueueLimit());
         this.startTime = System.currentTimeMillis();
     }
     
+    /**
+     * check that mandatory information are here
+     * @param config2
+     */
+    private void check(Config config) {
+        if (config.getAppKey()==null || config.getAppKey().length()==0) {
+            String msg = "Event Tracker client configuration error: missing the appKey";
+            logger.info(msg);
+            throw new IllegalStateException(msg);
+        }
+        if (config.getSecretKey()==null || config.getSecretKey().length()==0) {
+            String msg = "Event Tracker client configuration error: missing the secretKey";
+            logger.info(msg);
+            throw new IllegalStateException(msg);
+        }
+    }
+
     /**
      * Check if the publisher is running. Will return false once you call shutdown.
      * @return

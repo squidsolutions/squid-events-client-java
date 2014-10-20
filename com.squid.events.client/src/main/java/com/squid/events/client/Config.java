@@ -4,7 +4,7 @@ public class Config {
     
     private String endpoint = "https://events.tracker.squidanalytics.com/tracker/api/v1.0";
     
-    private String appKey = "null";
+    private String appKey = null;
     
     private String secretKey = null;
     
