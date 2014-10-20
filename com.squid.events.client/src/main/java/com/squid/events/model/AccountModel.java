@@ -20,11 +20,8 @@ public class AccountModel extends UsageModel {
      * this is a reference code that define how the user gain access to the Account
      */
     public static final String pubAuthenticationMethod = "pub:authMethod";
-
-    public AccountModel() {
-    }
     
-    public AccountModel(String schemaName, String eventType) {
+    protected AccountModel(String schemaName, String eventType) {
         super(schemaName, eventType);
     }
     

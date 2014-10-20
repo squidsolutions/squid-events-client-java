@@ -42,9 +42,6 @@ public class UsageModel extends EventModel {
      * Any error text that would be interesting to report, send back to the client from the server
      */
     public static final String usageErrorCode = "ux:errorCode";
-    
-    public UsageModel() {
-    }
 
     public UsageModel(String schemaName, String eventType) {
         super(schemaName, eventType);

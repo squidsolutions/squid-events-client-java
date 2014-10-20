@@ -1,7 +1,7 @@
 package com.squid.events.model;
 
 /**
- * define some special kinesis field
+ * define some special kinesis field - not for client
  * 
  * @author sergefantino
  *

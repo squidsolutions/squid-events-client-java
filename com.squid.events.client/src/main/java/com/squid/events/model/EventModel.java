@@ -23,8 +23,8 @@ public class EventModel extends HashMap<String, Object> {
     public static final String EventTimeZone = "xx:eventTimeZone";
     public static final String ServerIP = "xx:serverIP";
     
-    public EventModel() {
-        // TODO Auto-generated constructor stub
+    public EventModel(String schemaName) {
+        put(SchemaName,schemaName);
     }
     
     public EventModel(String schemaName, String eventType) {

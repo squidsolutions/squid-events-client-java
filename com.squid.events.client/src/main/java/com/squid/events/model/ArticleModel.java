@@ -9,6 +9,8 @@ package com.squid.events.model;
 public class ArticleModel extends EventModel {
 
     private static final long serialVersionUID = -3964785059754420054L;
+    
+    public static final String articleSchemaName = "art:pub_1.0";
 
     /**
      * content type 
@@ -52,6 +54,10 @@ public class ArticleModel extends EventModel {
     public static final String articleISBN = "art:isbn";
     
     public static final String articleDOI = "art:doi";
+    
+    public ArticleModel() {
+        super(articleSchemaName);
+    }
 
     public ArticleModel withContentType(String contentType) {
         super.put(articleContentType,contentType);
