@@ -22,12 +22,12 @@ public class TestLoad {
     
     static final Logger logger = LoggerFactory.getLogger(TestLoad.class);
     
-    //private String endpoint = "http://localhost:8080/tracker/api/v1.0";
-    private String endpoint = "http://default-environment-3hj9nxa3pq.elasticbeanstalk.com/api/v1.0";
+    private String endpoint = "http://localhost:8080/tracker/api/v1.0";
+    //private String endpoint = "http://default-environment-3hj9nxa3pq.elasticbeanstalk.com/api/v1.0";
     
-    private String appKey= "PQ01";
+    private String appKey= "squid-test";
     
-    private String secretKey = "PQ01";
+    private String secretKey = "9ff7b38a3d6a45f1a7db0c5e12161b3f";
 
     private CountDownLatch start;
     private CountDownLatch complete;
