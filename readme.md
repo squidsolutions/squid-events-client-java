@@ -9,9 +9,7 @@ The library will handle all the work to send the events to the Tracker Server in
 Getting started
 ---------------
 
-1. getting the library
-
-2. initialization
+## Initialization
 
 ```
 // create the config
@@ -25,11 +23,18 @@ EventTracker.initialize(config);
 You can use the default configuration for all technical settings. It is production ready.
 You must specify your application key and secret key. If not provided the initialize() method wil throws an IllegalStateException.
 
+## Dependencies
+
+The SDK relies on:
+
+* Java JRE 1.5 or greater
+* slf4j (log)
+* jackson 2.4.0 (jon support)
 
 Tracking events
 ---------------
 
-1. creating the EventModel
+## creating the EventModel
 
 This is an exemple of a retrieval event, providing extensive article definition:
 
@@ -53,7 +58,7 @@ EventModel event = new RetrievalEvent()
 .withServerIP("127.0.0.1");
 ```
 
-2. sending event
+## sending event
 
 You can easily send the previous event.
 
@@ -81,7 +86,6 @@ public class ServletContextListenerImpl implements ServletContextListener {
 
 }
 ```
-
 
 How does it works?
 ------------------
