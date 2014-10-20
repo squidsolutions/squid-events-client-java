@@ -2,7 +2,7 @@ package com.squid.events.model;
 
 import java.util.Collection;
 
-public class SearchEvent extends PublishingModel {
+public class SearchEvent extends AccountModel {
   
     private static final long serialVersionUID = -5194563972531281038L;
     

@@ -1,6 +1,6 @@
 package com.squid.events.model;
 
-public class RetrievalEvent extends PublishingModel {
+public class RetrievalEvent extends AccountModel {
 
     private static final long serialVersionUID = 3263181299164044911L;
     
