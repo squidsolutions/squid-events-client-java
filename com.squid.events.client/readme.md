@@ -31,14 +31,39 @@ Tracking events
 
 1. creating the EventModel
 
+This is an exemple of a retrieval event, providing extensive article definition:
 
+```
+ArticleModel article = new ArticleModel()
+.withContentType("article")
+.withDiscipline("science")
+.withJournal("nature")
+// more properties here...
+;
+EventModel event = new RetrievalEvent()
+.withContentOwnerID("myUniversity")
+.withContentType("article")
+.withDisplayFormat("PDF")
+.withEntitlement("myUnivertsity")
+.withContentReferenceArticle(article)// reference the article
+.withClientIP("127.0.0.1")
+.withSessionID("1234")
+.withUserID("sergio")
+.withPageViewURL("http://myapp/contentPage")
+.withServerIP("127.0.0.1");
+```
 
 2. sending event
+
+You can easily send the previous event.
 
 ```
 // send the event and return
 EventTracker.send(event,10);
 ```
+
+Note that the EventTracker will not make a internal copy of the event to avoid unnecessary memory allocation.
+So you must not re-use the same EventModel object because this will lead to inconsistency in the flushing queue.
 
 Flushing the queue
 ------------------
