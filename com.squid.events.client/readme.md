@@ -69,6 +69,18 @@ Flushing the queue
 ------------------
 
 The queue will be automatically flushed when you terminate the client.
+This is ideally done in the ServletContextListener.contextDestroyed() method, where you can simply call the EventTracker shutdown method:
+
+```
+public class ServletContextListenerImpl implements ServletContextListener {
+
+    @Override
+    public void contextDestroyed(ServletContextEvent arg0) {
+    	EventTracker.shutdown();
+    }
+
+}
+``
 
 
 How does it works?
