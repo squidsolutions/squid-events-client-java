@@ -87,6 +87,8 @@ public class ServletContextListenerImpl implements ServletContextListener {
 }
 ```
 
+Note that flushing the queue may take several seconds to return depending on the queue state & configuration.
+
 How does it works?
 ------------------
 
