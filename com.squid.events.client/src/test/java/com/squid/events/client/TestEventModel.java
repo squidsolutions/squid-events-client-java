@@ -45,10 +45,12 @@ public class TestEventModel {
             e.printStackTrace();
         }
         try {
-            ArticleModel article = new ArticleModel();
-            article.put(ArticleModel.articleContentType, "article");
-            article.put(ArticleModel.articleDiscipline, "science");
-            article.put(ArticleModel.articleJournal, "nature");
+            ArticleModel article = new ArticleModel()
+                .withContentType("article")
+                .withDiscipline("science")
+                .withJournal("nature")
+                // more properties here...
+                ;
             EventModel event = new RetrievalEvent()
                 .withContentOwnerID("myUniversity")
                 .withContentType("article")
