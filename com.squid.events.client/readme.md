@@ -14,20 +14,36 @@ Getting started
 2. initialization
 
 ```
+// create the config
 Config config = new Config();
 config.setAppKey("application-key");
 config.setSecretKey("secret-key");
-//
+
+// initialize the tracker
 EventTracker.initialize(config);
 ``
+You can use the default configuration for all technical settings. It is production ready.
+You must specify your application key and secret key. If not provided the initialize() method wil throws an IllegalStateException.
+
 
 Tracking events
---------------
+---------------
 
 1. creating the EventModel
 
+
+
 2. sending event
 
+```
+// send the event and return
+EventTracker.send(event,10);
+```
+
+Flushing the queue
+------------------
+
+The queue will be automatically flushed when you terminate the client.
 
 
 How does it works?
@@ -53,6 +69,9 @@ If your application is expected to generate such load, you would need to optimiz
 1. consider extending the queue size; the queue size is used mostly to absorb pick of usage. 
 Remember that once the queue is full, call to send() will either fail (if you enforce a timeout) or block (until there is some room in the queue).
 
-2. Consider adding more flushers; you can have multiple background threads flushing the queue in parallel.
+2. it is possible to adjust the send() method timeout setting. By default the timeout is 10ms. 
+By setting the timeout to 0ms, the send() will fail straight if the queue is full.
+
+3. Consider adding more flushers; you can have multiple background threads flushing the queue in parallel.
 Each flusher will contact the Tracker Server independently, thus adding more network load from your application.
 A single flusher can sustain about 500 events/s.
