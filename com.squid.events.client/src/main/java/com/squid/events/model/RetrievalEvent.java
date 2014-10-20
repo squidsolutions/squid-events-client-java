@@ -1,6 +1,6 @@
 package com.squid.events.model;
 
-public class RetrievalEvent extends UsageEvent {
+public class RetrievalEvent extends PublishingModel {
 
     private static final long serialVersionUID = 3263181299164044911L;
     
@@ -9,9 +9,23 @@ public class RetrievalEvent extends UsageEvent {
     public static final String retrievEventType = "retriev";
     
     public static final String retrievSearchOriginID = "rt:searchOriginID";
+    
+    /**
+     * the reference of the content
+     */
+    public static final String retrievContentReferenceID = "rt:contentRefID";
+    
+    /**
+     * if the content is not referenced, this allow to provide a ArticleModel description
+     */
+    public static final String retrievContentReferenceArticle = "rt:contentRefArticle";
+    
     public static final String retrievContentType = "rt:contentType";
+    
     public static final String retrievDisplayFormat = "rt:displayFormat";
+    
     public static final String retrievContentOwner = "rt:contentOwner";
+    
     public static final String retrievContentEntitlement = "rt:contentEntitlement";
     
     public RetrievalEvent() {
@@ -25,6 +39,16 @@ public class RetrievalEvent extends UsageEvent {
      */
     public RetrievalEvent withSearchOriginID(String ID) {
         super.put(retrievSearchOriginID,ID);
+        return this;
+    }
+    
+    public RetrievalEvent withContentReferenceID(String ID) {
+        super.put(retrievContentReferenceID,ID);
+        return this;
+    }
+    
+    public RetrievalEvent withContentReferenceArticle(ArticleModel article) {
+        super.put(retrievContentReferenceArticle,article);
         return this;
     }
     
