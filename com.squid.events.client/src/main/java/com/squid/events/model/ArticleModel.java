@@ -9,19 +9,17 @@ package com.squid.events.model;
 public class ArticleModel extends EventModel {
 
     private static final long serialVersionUID = -3964785059754420054L;
-    
+
+    /**
+     * content type 
+     * <p>
+     * example: article, book, journal, newspaper, abstract, ...
+     */
     public static final String articleContentType = "art:contentType";
     
     public static final String articleLanguage = "art:language";
     
     public static final String articleDiscipline = "art:discipline";
-    
-    /**
-     * article type 
-     * <p>
-     * example: article, book, journal, newspaper, abstract, ...
-     */
-    public static final String articleType = "art:type";
     
     /**
      * reference source, if the article was been sourced from external source.
@@ -67,11 +65,6 @@ public class ArticleModel extends EventModel {
     
     public ArticleModel withDiscipline(String discipline) {
         super.put(articleDiscipline,discipline);
-        return this;
-    }
-    
-    public ArticleModel withType(String type) {
-        super.put(articleType,type);
         return this;
     }
     
