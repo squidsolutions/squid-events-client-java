@@ -21,7 +21,7 @@ config.setSecretKey("secret-key");
 
 // initialize the tracker
 EventTracker.initialize(config);
-``
+```
 You can use the default configuration for all technical settings. It is production ready.
 You must specify your application key and secret key. If not provided the initialize() method wil throws an IllegalStateException.
 
