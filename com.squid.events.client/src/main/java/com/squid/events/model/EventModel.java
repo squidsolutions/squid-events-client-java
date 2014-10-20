@@ -33,6 +33,11 @@ public class EventModel extends HashMap<String, Object> {
         withEventDate(Calendar.getInstance());
     }
     
+    public String getString(String key) {
+        Object value = super.get(key);
+        return value!=null?value.toString():"";
+    }
+    
     public EventModel with(String key, Object value) {
         super.put(key, value);
         return this;
