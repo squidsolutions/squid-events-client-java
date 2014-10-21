@@ -36,6 +36,13 @@ Tracking events
 
 ## creating an Event
 
+The comprehensive documentation for Events is available at the https://github.com/squidsolutions/squid-events-api.
+
+Following are several examples covering the three kind of currently supported events:
+* StartSessionEvent
+* SearchEvent
+* RetrievalEvent
+
 ### start a new session event
 
 This is an example of a new session event created for a visitor
