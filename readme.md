@@ -34,28 +34,65 @@ The SDK relies on:
 Tracking events
 ---------------
 
-## creating the EventModel
+## creating an Event
+
+### start a new session event
+
+This is an example of a new session event created for a visitor
+
+```
+// create the new session event
+EventModel event = new StartSessionEvent()
+    .withReferrerURL("https://google.com")
+    .withUserAgent("chrome")
+    .withAccountID("university")
+    .withAuthenticationMethod("IP")
+    .withSessionID("123")
+    .withPageViewURL("http://myapp/landingpage")
+    .withUserID("abc");
+```
+
+### search event
+
+This is an example of a search event
+
+```
+// create the search event
+EventModel searchEvent = new SearchEvent()
+    .withEngine("quick")
+    .withFilters("format=pdf")
+    .withResultCount(100)
+    .withResultID("x1234")
+    .withResultPage(1)
+    .withTerms("some search terms")
+    .withSessionID("123")
+    .withUserID("abc");
+```
+
+### retrieval event
 
 This is an exemple of a retrieval event, providing extensive article definition:
 
 ```
+// first create an Article model with the displayed article properties
 ArticleModel article = new ArticleModel()
-.withContentType("article")
-.withDiscipline("science")
-.withJournal("nature")
+	.withContentType("article")
+	.withDiscipline("science")
+	.withJournal("nature")
 // more properties here...
 ;
+// then create the retrieval event
 EventModel event = new RetrievalEvent()
-.withContentOwnerID("myUniversity")
-.withContentType("article")
-.withDisplayFormat("PDF")
-.withEntitlement("myUnivertsity")
-.withContentReferenceArticle(article)// reference the article
-.withClientIP("127.0.0.1")
-.withSessionID("1234")
-.withUserID("sergio")
-.withPageViewURL("http://myapp/contentPage")
-.withServerIP("127.0.0.1");
+	.withContentOwnerID("myUniversity")
+	.withContentType("article")
+	.withDisplayFormat("PDF")
+	.withEntitlement("myUnivertsity")
+	.withContentReferenceArticle(article)// reference the article
+	.withClientIP("127.0.0.1")
+	.withSessionID("1234")
+	.withUserID("sergio")
+	.withPageViewURL("http://myapp/contentPage")
+	.withServerIP("127.0.0.1");
 ```
 
 ## sending event
