@@ -8,7 +8,7 @@ import com.squid.events.model.EventModel;
  * How to use it from the application code:
  * 
  * First application code must initialize the EventTracker with the config.
- * Note that the default config setting are production ready.
+ * Note that the default config setting are production ready, just add your app & secret key.
  * 
  * Once the EventTracker is initialize, it is safe to call the send() event method concurrently.
  * 

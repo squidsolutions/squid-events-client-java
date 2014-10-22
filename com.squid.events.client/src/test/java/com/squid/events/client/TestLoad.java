@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import com.squid.events.client.Config;
 import com.squid.events.model.EventModel;
 import com.squid.events.model.RetrievalEvent;
-import com.squid.events.model.RetrievalModel;
 
 public class TestLoad {
 
@@ -24,7 +23,7 @@ public class TestLoad {
     static final Logger logger = LoggerFactory.getLogger(TestLoad.class);
     
     private String endpoint = "http://localhost:8080/tracker/api/v1.0";
-    //private String endpoint = "http://default-environment-3hj9nxa3pq.elasticbeanstalk.com/api/v1.0";
+    //private String endpoint = "https://events.tracker.squidanalytics.com/tracker/api/v1.0";
     
     private String appKey= "squid-test";
     

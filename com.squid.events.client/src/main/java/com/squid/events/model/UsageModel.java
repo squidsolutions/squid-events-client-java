@@ -9,6 +9,9 @@ public class UsageModel extends EventModel {
 
     private static final long serialVersionUID = -216872748521850295L;
     
+    /**
+     * this is the client IP (v4 or v6)
+     */
     public static final String usageClientIP = "ux:clientIP";
     
     /**

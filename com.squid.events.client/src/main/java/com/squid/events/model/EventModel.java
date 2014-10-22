@@ -3,6 +3,7 @@ package com.squid.events.model;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 /**
  * The base event model class. It defines basic information common to every events.
@@ -17,10 +18,29 @@ public class EventModel extends HashMap<String, Object> {
      */
     private static final long serialVersionUID = 5797953891086795430L; 
     
+    /**
+     * the schemaName must be a reference identifier
+     */
     public static final String SchemaName = "xx:schemaName";
+    
+    /**
+     * the type of event, must be a reference
+     */
     public static final String EventType = "xx:eventType";
+    
+    /**
+     * the date of the event; this one will set both the time and time-zone
+     */
     public static final String EventDate = "xx:eventDate";
-    public static final String EventTimeZone = "xx:eventTimeZone";
+    
+    /**
+     * the date timezone if not GMT-0
+     */
+    public static final String EventTimeZone = "xx:eventTMZ";
+    
+    /**
+     * the serverIP; this is optional, the Tracker Server can add this latter
+     */
     public static final String ServerIP = "xx:serverIP";
     
     public EventModel(String schemaName) {
@@ -45,11 +65,11 @@ public class EventModel extends HashMap<String, Object> {
     
     /**
      * the schemaName must be a reference identifier
-     * @param termschemaNames
+     * @param schemaName
      * @return
      */
-    public EventModel withSchemaName(String termschemaNames) {
-        super.put(SchemaName, termschemaNames);
+    public EventModel withSchemaName(String schemaName) {
+        super.put(SchemaName, schemaName);
         return this;
     }
     
@@ -91,6 +111,16 @@ public class EventModel extends HashMap<String, Object> {
      */
     public EventModel withEventDate(long date) {
         super.put(EventDate, date);
+        return this;
+    }
+    
+    /**
+     * the date timezone if not GMT-0
+     * @param tmz
+     * @return
+     */
+    public EventModel withEventTimeZone(TimeZone tmz) {
+        super.put(EventTimeZone, tmz.getDisplayName());
         return this;
     }
     
