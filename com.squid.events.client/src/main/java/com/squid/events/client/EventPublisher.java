@@ -146,7 +146,6 @@ public class EventPublisher {
      */
     public void flush() {
         logger.info("flush the queue");
-        // flush send all the remaining events in one http call
         int size = queue.size();
         int i=0;
         while (!queue.isEmpty()) {
