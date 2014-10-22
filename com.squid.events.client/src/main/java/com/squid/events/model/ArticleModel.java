@@ -13,47 +13,60 @@ public class ArticleModel extends EventModel {
     public static final String articleSchemaName = "art:pub_1.0";
 
     /**
-     * content type 
-     * <p>
-     * example: article, book, journal, newspaper, abstract, ...
+     * type of content that has been retrieved.
+     * example: Dissertation, Newspapers, Book...
      */
     public static final String articleContentType = "art:contentType";
     
+    /**
+     * International code of the language in which the content is made.
+     */
     public static final String articleLanguage = "art:language";
     
+    /**
+     * Academic subject matter the content relates to
+     */
     public static final String articleDiscipline = "art:discipline";
     
     /**
-     * reference source, if the article was been sourced from external source.
-     * <p>
-     * example: scopus, ebsco, google...
+     * Name of the source from which the reference was imported
      */
     public static final String articleReferenceSource = "art:source";
     
     /**
-     * only required if the articleReferenceSource data are not referenced
+     * Name of category of grouping of reference sources
      */
     public static final String articleReferenceSourceType = "art:sourceType";
     
     /**
-     * the journal, should be a reference ID
-     * example: pediatrics, nature, ...
+     * Name of the journal the article was published in
      */
-    public static final String articleJournal = "art:journal";
-    
     public static final String articlePublicationTitle = "art:pubTitle";
     
-    public static final String articleEffectiveTitle = "art:effectiveTitle";
-    
+    /**
+     * Identification of the database the journal belongs to
+     */
     public static final String articleDBID = "art:dbid";
     
-    public static final String articleSSID = "art:ssid";
-    
+    /**
+     * When applicable: ISSN if the article is published in a periodical
+     */
     public static final String articleISSN = "art:issn";
     
+    /**
+     * When applicable: ISBN if the article is published in a book
+     */
     public static final String articleISBN = "art:isbn";
     
+    /**
+     * When applicable: Digital Object Identifier of the article
+     */
     public static final String articleDOI = "art:doi";
+    
+    /**
+     * Internal ID of the article in your database
+     */
+    public static final String articleCustomID = "art:customID";
     
     public ArticleModel() {
         super(articleSchemaName);
@@ -84,28 +97,13 @@ public class ArticleModel extends EventModel {
         return this;
     }
     
-    public ArticleModel withJournal(String journalID) {
-        super.put(articleJournal,journalID);
-        return this;
-    }
-    
     public ArticleModel withPublicationTitle(String title) {
         super.put(articlePublicationTitle,title);
         return this;
     }
     
-    public ArticleModel withEffectiveTitle(String title) {
-        super.put(articleEffectiveTitle,title);
-        return this;
-    }
-    
     public ArticleModel withDBID(String dbid) {
         super.put(articleDBID,dbid);
-        return this;
-    }
-    
-    public ArticleModel withSSID(String ssid) {
-        super.put(articleSSID,ssid);
         return this;
     }
     
@@ -121,6 +119,11 @@ public class ArticleModel extends EventModel {
     
     public ArticleModel withDOI(String doi) {
         super.put(articleDOI,doi);
+        return this;
+    }
+    
+    public ArticleModel withCustomID(String customID) {
+        super.put(articleCustomID,customID);
         return this;
     }
 
