@@ -1,7 +1,7 @@
 package com.squid.events.model;
 
 /**
- * an event model for managing publishing specific properties
+ * an event model for managing Account level specific properties
  * 
  * @author sergefantino
  *
