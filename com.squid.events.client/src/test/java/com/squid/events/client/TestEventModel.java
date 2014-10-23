@@ -68,7 +68,7 @@ public class TestEventModel {
             String test = jackson.writeValueAsString(event);
             System.out.println(test);
             EventModel check = jackson.readValue(test, EventModel.class);
-            Object xxx = check.get(RetrievalModel.retrievContentReferenceArticle);
+            Object xxx = check.get(RetrievalModel.retrievalContentReferenceArticle);
             Assert.assertNotNull(xxx);
         } catch (JsonProcessingException e) {
             // TODO Auto-generated catch block
@@ -79,11 +79,11 @@ public class TestEventModel {
         }
         // session event
         EventModel event = new StartSessionEvent()
-        .withReferrerURL("https://google.com")
         .withUserAgent("chrome")
         .withAccountID("university")
         .withAuthenticationMethod("IP")
         .withSessionID("123")
+        .withReferrerURL("https://google.com")
         .withPageViewURL("http://myapp/landingpage")
         .withUserID("abc");
         // search event
