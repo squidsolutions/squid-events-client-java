@@ -17,8 +17,9 @@ public class Config {
     // default timeout for the send() method is 10ms
     private int sendTimeout = 10;
     
-    public Config() {
-        // TODO Auto-generated constructor stub
+    public Config(String appKey, String secretKey) {
+        this.appKey = appKey;
+        this.secretKey = secretKey;
     }
     
     public String getEndpoint() {
