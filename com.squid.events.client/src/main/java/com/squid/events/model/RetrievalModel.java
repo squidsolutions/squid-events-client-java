@@ -1,94 +1,122 @@
 package com.squid.events.model;
 
+/**
+ * Properties to track retrieval events. It extends from the Account model.
+ * @author sergefantino
+ *
+ */
 public class RetrievalModel extends AccountModel {
 
     private static final long serialVersionUID = 3263181299164044911L;
     
-    public static final String retrievSchema = "retrieval:pub_1.0";
+    public static final String retrievalSchema = "retrieval:pub_1.0";
     
-    public static final String retrievEventType = "display";
-    
-    public static final String retrievSearchOriginID = "rt:searchOriginID";
+    public static final String retrievalDisplayEventType = "display";
     
     /**
-     * the reference of the content
+     * identify the search that leads to that display, see SearchresultID
      */
-    public static final String retrievContentReferenceID = "rt:contentRefID";
+    public static final String retrievalSearchOriginID = "rt:searchOriginID";
+    
+    /**
+     * the reference of the content. Must be a valid reference in the meta-data source.
+     */
+    public static final String retrievalContentReferenceID = "rt:contentRefID";
     
     /**
      * if the content is not referenced, this allow to provide a ArticleModel description
      */
-    public static final String retrievContentReferenceArticle = "rt:contentRefArticle";
+    public static final String retrievalContentReferenceArticle = "rt:contentRefArticle";
     
-    public static final String retrievContentType = "rt:contentType";
+    /**
+     * the content type of the artifact retrieved. It should be a reference value.
+     */
+    public static final String retrievalContentType = "rt:contentType";
     
-    public static final String retrievDisplayFormat = "rt:displayFormat";
+    /**
+     * reference the display format
+     */
+    public static final String retrievalDisplayFormat = "rt:displayFormat";
     
-    public static final String retrievContentOwner = "rt:contentOwner";
+    /**
+     * identify the accountID that owns the content for the actual viewer
+     */
+    public static final String retrievalContentOwner = "rt:contentOwner";
     
-    public static final String retrievContentEntitlement = "rt:contentEntitlement";
+    /**
+     * define the entitlement for that account/display
+     */
+    public static final String retrievalContentEntitlement = "rt:contentEntitlement";
     
     protected RetrievalModel(String schemaName, String eventType) {
         super(schemaName, eventType);
     }
 
     public RetrievalModel(String eventType) {
-        super(retrievSchema,retrievEventType);
+        super(retrievalSchema,eventType);
     }
     
     /**
-     * the ID of the search that leads to the retrieval
+     * identify the search that leads to that display, see SearchresultID
      * @param ID
      * @return
      */
-    public RetrievalModel withSearchOriginID(String ID) {
-        super.put(retrievSearchOriginID,ID);
+    public RetrievalModel withSearchOriginID(String searchResultID) {
+        super.put(retrievalSearchOriginID,searchResultID);
         return this;
     }
     
-    public RetrievalModel withContentReferenceID(String ID) {
-        super.put(retrievContentReferenceID,ID);
+    /**
+     * the reference of the content. Must be a valid reference in the meta-data source.
+     * @param ID
+     * @return
+     */
+    public RetrievalModel withContentReferenceID(String contentReferenceID) {
+        super.put(retrievalContentReferenceID,contentReferenceID);
         return this;
     }
     
-    public RetrievalModel withContentReferenceArticle(ArticleModel article) {
-        super.put(retrievContentReferenceArticle,article);
+    /**
+     * if the content is not referenced, this allow to provide a ArticleModel description
+     * @param article
+     * @return
+     */
+    public RetrievalModel withContentReferenceArticle(ArticleModel articleModel) {
+        super.put(retrievalContentReferenceArticle,articleModel);
         return this;
     }
     
     /**
      * the content type of the artifact retrieved
-     * It should be a reference value.
-     * example: ID of an image, video, article, journal…
-     * @param ID
+     * example: image, video, article, journal…
+     * @param contentType
      * @return
      */
-    public RetrievalModel withContentType(String type) {
-        super.put(retrievContentType,type);
+    public RetrievalModel withContentType(String contentType) {
+        super.put(retrievalContentType,contentType);
         return this;
     }
     
     /**
-     * the display format
-     * It should be a reference value.
+     * the display format value
      * example: JPEG, HTML, ABSTRACT, PDF
      * @param ID
      * @return
      */
-    public RetrievalModel withDisplayFormat(String type) {
-        super.put(retrievDisplayFormat,type);
+    public RetrievalModel withDisplayFormat(String displayFormat) {
+        super.put(retrievalDisplayFormat,displayFormat);
         return this;
     }
     
     /**
-     * the account ID that owns the content - must be a valid account ID
-     * It should be a reference value.
+     * the account ID that owns the content.
+     * It must be a valid reference in the meta-data source.
      * 
      * @param ID
      * @return
      */
     public RetrievalModel withContentOwnerID(String ID) {
-        super.put(retrievContentOwner,ID);
+        super.put(retrievalContentOwner,ID);
         return this;
     }
     
@@ -98,7 +126,7 @@ public class RetrievalModel extends AccountModel {
      * @return
      */
     public RetrievalModel withEntitlement(String entitlement) {
-        super.put(retrievContentEntitlement,entitlement);
+        super.put(retrievalContentEntitlement,entitlement);
         return this;
     }
 
