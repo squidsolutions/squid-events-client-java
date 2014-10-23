@@ -118,10 +118,8 @@ public class TestLoad {
     
     @Test
     public void sendTestEvent() throws InterruptedException {
-        Config config = new Config();
+        Config config = new Config(appKey,secretKey);
         config.setEndpoint(endpoint);
-        config.setAppKey(appKey);
-        config.setSecretKey(secretKey);
         //
         config.setMaxFlusherCount(5);
         //EventTrackerClient client = new EventTrackerClient(config);
