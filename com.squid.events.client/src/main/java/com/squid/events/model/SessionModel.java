@@ -1,5 +1,11 @@
 package com.squid.events.model;
 
+/**
+ * Properties to track session level events. It extends from the Account model.
+ * 
+ * @author sergefantino
+ *
+ */
 public class SessionModel extends AccountModel {
     
     private static final long serialVersionUID = 8121923221818713546L;
@@ -11,7 +17,7 @@ public class SessionModel extends AccountModel {
      */
     public static final String sessionSchema = "session_1.0";
     
-    public static final String startSessionEventType = "start";
+    public static final String sessionStartEventType = "start";
     
     /**
      * this is a persistent ID associated with the browser (or rich application) generating the event on the client side. 
@@ -19,11 +25,6 @@ public class SessionModel extends AccountModel {
      * It can be used to group multiple session with the same browser
      */
     public static final String sessionBrowserID = "ss:browserID";
-    
-    /**
-     * this is the full referrer’s URL
-     */
-    public static final String sessionReferrer = "ss:referrer";
     
     /**
      * UserAgent string sent back by the client
@@ -52,17 +53,7 @@ public class SessionModel extends AccountModel {
     }
     
     /**
-     * this is the full referrer’s URL
-     * @param URL of the referrer
-     * @return this
-     */
-    public SessionModel withReferrerURL(String URL) {
-        super.put(sessionReferrer,URL);
-        return this;
-    }
-    
-    /**
-     * UserAgent string send back by the client
+     * UserAgent string sent back by the client
      * @param agent
      * @return this
      */
