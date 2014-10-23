@@ -2,36 +2,70 @@ package com.squid.events.model;
 
 import java.util.Collection;
 
+/**
+ * Properties to track search events. It extends from the Account model.
+ * @author sergefantino
+ *
+ */
 public class SearchModel extends AccountModel {
   
     private static final long serialVersionUID = -5194563972531281038L;
     
-
     public static final String searchSchema = "search:pub_1.0";
     
     /**
-     * recall event = result of a search query
+     * search event = result of a search query
      */
     public static final String searchEventType = "search";
     
+    /**
+     * Search term entered by the user
+     */
     public static final String SearchTerms = "sx:terms";
+    
+    /**
+     * Any set of key/value pairs that identify a filter & options (multiple choice supported) selected to filter the search results
+     */
     public static final String SearchFilters = "sx:filters";
+    
+    /**
+     * Type of search engine used to resolve the search
+     * example: quick/basic, advanced, ...
+     */
     public static final String SearchEngine = "sx:engine";
+    
+    /**
+     * Total number of search results
+     */
     public static final String SearchResultCount = "sx:resultCount";
+    
+    /**
+     * Page number currently displayed. Should be 1 for the first result page, then 2 if the user click next. 
+     * You can use the SearchResultID to group several pages within the same search.
+     */
     public static final String SearchResultPage = "sx:resultPage";
+    
+    /**
+     * 
+     */
     public static final String SearchResultProducts = "sx:resultProducts";
-    public static final String SearchResultID = "sx:resultID";
+    
+    /**
+     * UUID associated with the original search event. 
+     * Can be used to link event initiated from the search result page, for example going to next page or reference retrieval.
+     */
+    public static final String SearchResultUUID = "sx:resultUUID";
 
     protected SearchModel(String schemaName, String eventType) {
         super(schemaName, eventType);
     }
 
-    public SearchModel(String eventType) {
+    protected SearchModel(String eventType) {
         super(searchSchema, eventType);
     }
     
     /**
-     * the search query terms
+     * Search term entered by the user
      * @param terms
      * @return
      */
@@ -41,7 +75,7 @@ public class SearchModel extends AccountModel {
     }
     
     /**
-     * the search query filters
+     * Any set of key/value pairs that identify a filter & options (multiple choice supported) selected to filter the search results
      * @param filters
      * @return
      */
@@ -51,7 +85,8 @@ public class SearchModel extends AccountModel {
     }
     
     /**
-     * the search engine used for the query. For example: quick, advanced, ...
+     * Type of search engine used to resolve the search
+     * example: quick/basic, advanced, ...
      * @param engine
      * @return
      */
@@ -61,18 +96,19 @@ public class SearchModel extends AccountModel {
     }
     
     /**
-     * the ID associated with this search query, that can be used to refer to it
-     * @param engine
+     * UUID associated with the original search event. 
+     * Can be used to link event initiated from the search result page, for example going to next page or reference retrieval.
+     * @param UUID
      * @return
      */
-    public SearchModel withResultID(String ID) {
-        super.put(SearchResultID, ID);
+    public SearchModel withResultID(String UUID) {
+        super.put(SearchResultUUID, UUID);
         return this;
     }
     
     /**
-     * the number of result returned by the search query
-     * @param size
+     * Total number of search results
+     * @param count
      * @return
      */
     public SearchModel withResultCount(int count) {
@@ -81,7 +117,8 @@ public class SearchModel extends AccountModel {
     }
 
     /**
-     * the page index being displayed by the search
+     * Page number currently displayed. Should be 1 for the first result page, then 2 if the user click next. 
+     * You can use the SearchResultID to group several pages within the same search.
      * @param size
      * @return
      */
