@@ -24,7 +24,7 @@ public class SessionModel extends AccountModel {
      * Usually it will be retrieve from a cookie.
      * It can be used to group multiple session with the same browser
      */
-    public static final String sessionBrowserID = "ss:browserID";
+    public static final String sessionBrowserID = "ss:browserUUID";
     
     /**
      * UserAgent string sent back by the client
@@ -41,13 +41,13 @@ public class SessionModel extends AccountModel {
     }
     
     /**
-     * this is a persistent ID associated with the browser (or rich application) generating the event on the client side. 
+     * this is a persistent UUID associated with the browser (or rich application) generating the event on the client side. 
      * Usually it will be retrieve from a cookie.
      * It can be used to group multiple session with the same browser
      * @param ID
      * @return this
      */
-    public SessionModel withBrowserID(String ID) {
+    public SessionModel withBrowserUUID(String ID) {
         super.put(sessionBrowserID,ID);
         return this;
     }
