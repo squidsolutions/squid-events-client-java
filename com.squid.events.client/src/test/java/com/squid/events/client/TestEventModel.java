@@ -16,7 +16,7 @@ import com.squid.events.model.RetrievalModel;
 import com.squid.events.model.SearchEvent;
 import com.squid.events.model.StartSessionEvent;
 
-public class TestEventModel {
+public class TestEventModel extends EventModelFactory {
     
     public void testJson() {
         //
@@ -124,26 +124,6 @@ public class TestEventModel {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    }
-    
-    public EventModel createRetrievalEvent() {
-        ArticleModel article = new ArticleModel()
-            .withContentType("article")
-            .withDiscipline("science")
-            // more properties here...
-            ;
-        EventModel event = new RetrievalEvent()
-            .withContentOwnerID("myUniversity")
-            .withContentType("article")
-            .withDisplayFormat("PDF")
-            .withEntitlement("myUnivertsity")
-            .withContentReferenceArticle(article)
-            .withClientIP("127.0.0.1")
-            .withSessionID("1234")
-            .withUserID("sergio")
-            .withPageViewURL("http://something/somepage")
-            .withServerIP("127.0.0.1");
-        return event;
     }
 
 }
