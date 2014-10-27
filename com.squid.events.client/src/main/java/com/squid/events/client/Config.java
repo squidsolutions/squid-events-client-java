@@ -6,6 +6,10 @@ public class Config {
     
     private String appKey = null;
     
+    private String appVersion = null;
+    
+    private boolean appTestFlag = false;
+    
     private String secretKey = null;
     
     private int maxFlusherCount = 1;
@@ -46,6 +50,22 @@ public class Config {
     public Config withAppKey(String appKey) {
         this.appKey = appKey;
         return this;
+    }
+    
+    public String getAppVersion() {
+        return appVersion;
+    }
+    
+    public void setAppVersion(String appVersion) {
+        this.appVersion = appVersion;
+    }
+    
+    public boolean isAppTestFlag() {
+        return appTestFlag;
+    }
+    
+    public void setAppTestFlag(boolean appTestFlag) {
+        this.appTestFlag = appTestFlag;
     }
     
     public String getSecretKey() {
