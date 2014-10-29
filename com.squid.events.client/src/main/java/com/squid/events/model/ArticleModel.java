@@ -72,56 +72,112 @@ public class ArticleModel extends EventModel {
         super(articleSchemaName);
     }
 
+    /**
+     * type of content that has been retrieved.
+     * example: Dissertation, Newspapers, Book...
+     * @param contentType
+     * @return
+     */
     public ArticleModel withContentType(String contentType) {
         super.put(articleContentType,contentType);
         return this;
     }
     
+    /**
+     * International code of the language in which the content is made.
+     * @param language
+     * @return
+     */
     public ArticleModel withLanguage(String language) {
         super.put(articleLanguage,language);
         return this;
     }
     
+    /**
+     * Academic subject matter the content relates to
+     * @param discipline
+     * @return
+     */
     public ArticleModel withDiscipline(String discipline) {
         super.put(articleDiscipline,discipline);
         return this;
     }
     
+    /**
+     * Name of the source from which the reference was imported
+     * @param source
+     * @return
+     */
     public ArticleModel withReferenceSource(String source) {
         super.put(articleReferenceSource,source);
         return this;
     }
     
+    /**
+     * Name of category of grouping of reference sources
+     * @param type
+     * @return
+     */
     public ArticleModel withReferenceSourceType(String type) {
         super.put(articleReferenceSourceType,type);
         return this;
     }
     
+    /**
+     * Name of the journal the article was published in
+     * @param title
+     * @return
+     */
     public ArticleModel withPublicationTitle(String title) {
         super.put(articlePublicationTitle,title);
         return this;
     }
     
+    /**
+     * Identification of the database the journal belongs to
+     * @param dbid
+     * @return
+     */
     public ArticleModel withDBID(String dbid) {
         super.put(articleDBID,dbid);
         return this;
     }
     
+    /**
+     * When applicable: ISSN if the article is published in a periodical
+     * @param issn
+     * @return
+     */
     public ArticleModel withISSN(String issn) {
         super.put(articleISSN,issn);
         return this;
     }
     
+    /**
+     * When applicable: ISBN if the article is published in a book
+     * @param isbn
+     * @return
+     */
     public ArticleModel withISBN(String isbn) {
         super.put(articleISBN,isbn);
         return this;
     }
     
+    /**
+     * When applicable: Digital Object Identifier of the article
+     * @param doi
+     * @return
+     */
     public ArticleModel withDOI(String doi) {
         super.put(articleDOI,doi);
         return this;
     }
     
+    /**
+     * Internal ID of the article in your database
+     * @param customID
+     * @return
+     */
     public ArticleModel withCustomID(String customID) {
         super.put(articleCustomID,customID);
         return this;

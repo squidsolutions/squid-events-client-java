@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squid.events.commons.Base64;
+import com.squid.events.commons.Constants;
 import com.squid.events.commons.Signature;
 import com.squid.events.model.EventModel;
 
@@ -46,9 +47,13 @@ public class EventPublisher {
     
     private long startTime = 0;
     
-    private AtomicLong count = new AtomicLong(0);
+    private AtomicLong pushSuccess = new AtomicLong(0);
+    private AtomicLong pushFailed = new AtomicLong(0);
     private AtomicLong sendSuccess = new AtomicLong(0);
     private AtomicLong sendFailed = new AtomicLong(0);
+
+    // the full url of the service: <endpoint>/<api>/<version>
+    private String serviceURL;
     
     /**
      * create the EventPublisher with this configuration.
@@ -60,10 +65,37 @@ public class EventPublisher {
     public EventPublisher(Config config) {
         check(config);
         this.config = config;
+        this.serviceURL = checkURL(config);
         this.queue = new LinkedBlockingQueue<EventModel>(config.getQueueLimit());
         this.startTime = System.currentTimeMillis();
     }
     
+    /**
+     * check that the endpoint is correctly configured and that the service is up and running
+     * @param config
+     * @return
+     */
+    private String checkURL(Config config) {
+        if (config.getEndpoint()==null || config.getEndpoint()=="") {
+            String msg = "Event Tracker client configuration error: missing the endpoint";
+            logger.info(msg);
+            throw new IllegalStateException(msg);
+        }
+        String url = config.getEndpoint();
+        if (!url.endsWith("/")) url += "/";
+        url += Constants.BASE_SERVICE+"/v"+Constants.VERSION;
+        checkURL(url);
+        return url;
+    }
+
+    /**
+     * check that the URL can accept events
+     * @param url
+     */
+    private void checkURL(String url) {
+        
+    }
+
     /**
      * check that mandatory information are here
      * @param config2
@@ -138,7 +170,7 @@ public class EventPublisher {
     
     public Stats getStats() {
         long now = System.currentTimeMillis();
-        return new Stats(this.sendSuccess.get(),this.sendFailed.get(),now-startTime);
+        return new Stats(this.pushSuccess.get(),this.sendFailed.get()+this.pushFailed.get(),now-startTime);
     }
 
     /**
@@ -166,6 +198,7 @@ public class EventPublisher {
         }
         logger.info("queue stats: max size = "+max_queue);
         logger.info("send():success="+sendSuccess.get()+"; failed="+sendFailed.get());
+        logger.info("push():success="+pushSuccess.get()+"; failed="+pushFailed.get());
     }
     
     public void poll() {
@@ -202,29 +235,43 @@ public class EventPublisher {
             String data = Base64.printBase64Binary(raw);
             String signature = Signature.calculateRFC2104HMAC(data,
                     config.getSecretKey());
-            int response = doPost(config.getEndpoint(), config.getAppKey(),
+            int response = doPost(serviceURL, config.getAppKey(),
                     "event-retrieval-1.0", signature, data);
             logger.info("sent "+events.size()+" events to API server");
             logger.info("API server replied with " + response);
-            count.addAndGet(events.size());
+            if (response==202) {
+                pushSuccess.addAndGet(events.size());
+            } else {
+                pushFailed.addAndGet(events.size());
+            }
         } catch (JsonProcessingException e) {
             // too bad
             logger.info("cannot write events as JSON: "
                     + e.getLocalizedMessage());
+            pushFailed.addAndGet(events.size());
         }
     }
 
-    private int doPost(String endpoint, String appKey, String schema,
+    private int doPost(String serviceURL, String appKey, String schema,
             String signature, String data) {
         URL url;
         HttpURLConnection connection = null;
         int returnCode = -1;
         try {
             // Create connection
-            String x = endpoint+"?"+"key="+URLEncoder.encode(appKey, "UTF-8")+"&schema="+URLEncoder.encode(schema, "UTF-8")+"&sig="+URLEncoder.encode(signature, "UTF-8");
-            url = new URL(x);
+            String request = serviceURL
+                    +"?"+Constants.APP_KEY_PARAM+"="+URLEncoder.encode(appKey, "UTF-8")
+                    +"&"+Constants.SIGNATURE_PARAM+"="+URLEncoder.encode(signature, "UTF-8");
+            if (config.getAppVersion()!=null && config.getAppVersion()!="") {
+                request += "&"+Constants.APP_VERSION_PARAM+"="+URLEncoder.encode(config.getAppVersion(), "UTF-8");
+            }
+            if (config.isAppTestFlag()) {
+                request += "&"+Constants.APP_TEST_PARAM+"=1";
+            }
+            url = new URL(request);
             //
             connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(Constants.HTTP_TIMEOUT);
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type",
                     "application/json; charset=utf-8");

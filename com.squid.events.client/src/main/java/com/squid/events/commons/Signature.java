@@ -2,7 +2,6 @@ package com.squid.events.commons;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 
 /**
 * This class defines common routines for generating
@@ -39,7 +38,7 @@ public class Signature {
             byte[] rawHmac = mac.doFinal(data.getBytes());
             
             // base64-encode the hmac
-            result = DatatypeConverter.printBase64Binary(rawHmac);
+            result = Base64.printBase64Binary(rawHmac);
             
         } catch (Exception e) {
             return null;

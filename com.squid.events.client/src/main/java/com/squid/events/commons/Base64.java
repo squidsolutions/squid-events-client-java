@@ -1,5 +1,10 @@
 package com.squid.events.commons;
 
+/**
+ * inlined code to avoid having to depend on JDK 1.7
+ * @author sergefantino
+ *
+ */
 public class Base64 {
 
     public static String printBase64Binary(byte[] input) {

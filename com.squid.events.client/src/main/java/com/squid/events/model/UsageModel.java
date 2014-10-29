@@ -24,6 +24,11 @@ public class UsageModel extends EventModel {
      * this is an internal ID that possibly identify uniquely the user
      */
     public static final String usageUserID = "ux:userID";
+
+    /**
+     * this is the full referrer’s URL
+     */
+    public static final String usageReferrer = "ux:referrer";
     
     /**
      * this is the full URL (domain, path, query string + anchors ...) requested
@@ -77,6 +82,16 @@ public class UsageModel extends EventModel {
      */
     public UsageModel withUserID(String ID) {
         super.put(usageUserID, ID);
+        return this;
+    }
+    
+    /**
+     * this is the full referrer’s URL
+     * @param URL of the referrer
+     * @return this
+     */
+    public UsageModel withReferrerURL(String URL) {
+        super.put(usageReferrer,URL);
         return this;
     }
     

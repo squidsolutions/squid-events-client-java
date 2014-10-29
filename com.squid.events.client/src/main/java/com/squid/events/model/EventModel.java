@@ -19,6 +19,21 @@ public class EventModel extends HashMap<String, Object> {
     private static final long serialVersionUID = 5797953891086795430L; 
     
     /**
+     * the application name (internal)
+     */
+    public static final String AppName = "xx:appName";
+    
+    /**
+     * the application version (internal)
+     */
+    public static final String AppVersion = "xx:appVer";
+    
+    /**
+     * the application test flag (internal)
+     */
+    public static final String AppTest = "xx:appTest";
+    
+    /**
      * the schemaName must be a reference identifier
      */
     public static final String SchemaName = "xx:schemaName";

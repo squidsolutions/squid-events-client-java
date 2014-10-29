@@ -13,7 +13,7 @@ import com.squid.events.client.Config;
 import com.squid.events.model.EventModel;
 import com.squid.events.model.RetrievalEvent;
 
-public class TestLoad {
+public class TestLoad implements TestConfig {
 
     static {
         // force using a different log4j directory
@@ -21,13 +21,6 @@ public class TestLoad {
     }
     
     static final Logger logger = LoggerFactory.getLogger(TestLoad.class);
-    
-    private String endpoint = "http://localhost:8080/tracker/api/v1.0";
-    //private String endpoint = "https://events.tracker.squidanalytics.com/tracker/api/v1.0";
-    
-    private String appKey= "squid-test";
-    
-    private String secretKey = "9ff7b38a3d6a45f1a7db0c5e12161b3f";
 
     private CountDownLatch start;
     private CountDownLatch complete;
@@ -118,10 +111,8 @@ public class TestLoad {
     
     @Test
     public void sendTestEvent() throws InterruptedException {
-        Config config = new Config();
+        Config config = new Config(appKey,secretKey);
         config.setEndpoint(endpoint);
-        config.setAppKey(appKey);
-        config.setSecretKey(secretKey);
         //
         config.setMaxFlusherCount(5);
         //EventTrackerClient client = new EventTrackerClient(config);
