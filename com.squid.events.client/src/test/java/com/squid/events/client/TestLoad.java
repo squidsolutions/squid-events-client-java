@@ -13,7 +13,7 @@ import com.squid.events.client.Config;
 import com.squid.events.model.EventModel;
 import com.squid.events.model.RetrievalEvent;
 
-public class TestLoad implements TestConfig {
+public class TestLoad extends EventModelFactory implements TestConfig {
 
     static {
         // force using a different log4j directory
@@ -28,7 +28,7 @@ public class TestLoad implements TestConfig {
     // experiment
     protected int eventsPerSecond = 10;// throughput
     protected int numberOfProducers = 50;
-    protected int experieceDuration = 60*1;// duration in seconds
+    protected int experieceDuration = 10;// duration in seconds
     
     class User extends Thread {
         
@@ -83,21 +83,10 @@ public class TestLoad implements TestConfig {
         }
         
         private EventModel genEvent(int id) {
-            /*
-            EventModel event = new EventMode();
-            event.appId = appKey;
-            event.eventType = "retrieval";
-            event.serverIp = "127.0.0.2";
-            event.clientIp = "127.0.0.1";
-            event.sessionId = userID+"_"+id;
-            event.timestamp = System.currentTimeMillis();;
-            event.url = "http://something/somepage";
-            event.userId = userID;
-            return event;
-            */
             return new RetrievalEvent()
             .withContentOwnerID("myUniversity")
             .withContentType("article")
+            .withContentReferenceArticle(createArticleModel())
             .withDisplayFormat("PDF")
             .withEntitlement("myUnivertsity")
             .withClientIP("127.0.0.1")
