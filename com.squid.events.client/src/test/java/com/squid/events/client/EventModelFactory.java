@@ -38,23 +38,26 @@ public class EventModelFactory {
             .withUserID ("Tom");
         return event;
     }
+    
+    public ArticleModel createArticleModel() {
+        return 
+            new ArticleModel()
+            .withPublicationTitle("Advances in Database Technology — EDBT'98")
+            .withReferenceSource("scopus")
+            .withReferenceSourceType("web")
+            .withLanguage("us")
+            .withContentType("article")
+            .withDOI("10.1007/BFb0101000")
+            .withISBN("978-3-540-69709-1")
+            .withISSN("0302-9743")
+            .withDBID("springer");
+    }
         
     public EventModel createRetrievalEvent() {
         EventModel event = new RetrievalEvent ()
             .withContentOwnerID("parentUniversity")
             .withEntitlement("demo")
-            .withContentReferenceArticle(
-                new ArticleModel()
-                .withPublicationTitle("Advances in Database Technology — EDBT'98")
-                .withReferenceSource("scopus")
-                .withReferenceSourceType("web")
-                .withLanguage("us")
-                .withContentType("article")
-                .withDOI("10.1007/BFb0101000")
-                .withISBN("978-3-540-69709-1")
-                .withISSN("0302-9743")
-                .withDBID("springer")
-            )
+            .withContentReferenceArticle(createArticleModel())
             .withDisplayFormat("PDF")
             .withSearchOriginID("search1")
             .withAccountID ("myUniversity")
