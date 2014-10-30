@@ -9,16 +9,42 @@ The library will handle all the work to send the events to the Tracker Server in
 Getting started
 ---------------
 
-
 ### Dependencies
 
 The SDK relies on:
 
 * Java JRE 1.5 or greater
 * slf4j (log)
-* jackson 2.4.0 (jon support)
+* jackson 2.4.0 (json support)
+
+### Download
+
+You can directly get the latest release from the target directory:
+https://github.com/squidsolutions/squid-events-client-java/tree/release/com.squid.events.client/target
+
+### Maven
+
+You can easily build the SDK from source using Maven. Just Clone the project and run:
+```
+mvn package
+```
+
+You can also install the SDK in the local maven repository to quickly integrate it in your app:
+```
+mvn install
+```
+Then in order to integrate the SDK in your application you can just add the following dependency:
+```
+<dependency>
+	<groupId>com.squidsolutions.events-tracker</groupId>
+	<artifactId>events-tracker-sdk</artifactId>
+	<version>RELEASE</version>
+</dependency>
+```
 
 ### Initialization
+
+Before being able to send event, you must initialize the EventTracker with your application configuration.
 
 ```
 // create the config
@@ -97,10 +123,15 @@ This is an exemple of a retrieval event, providing extensive article definition:
 ```
 // first create an Article model with the displayed article properties
 ArticleModel article = new ArticleModel()
-	.withContentType("article")
-	.withDiscipline("science")
-	.withJournal("nature")
-// more properties here...
+        .withPublicationTitle("Advances in Database Technology — EDBT'98")
+	.withReferenceSource("scopus")
+        .withReferenceSourceType("web")
+        .withLanguage("us")
+        .withContentType("article")
+        .withDOI("10.1007/BFb0101000")
+        .withISBN("978-3-540-69709-1")
+        .withISSN("0302-9743")
+        .withDBID("springer")
 ;
 // then create the retrieval event
 EventModel event = new RetrievalEvent()
