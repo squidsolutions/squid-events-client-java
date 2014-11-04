@@ -1,5 +1,8 @@
 package com.squid.events.model;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * define an article reference
  * 
@@ -102,6 +105,26 @@ public class ArticleModel extends EventModel {
         super.put(articleDiscipline,discipline);
         return this;
     }
+
+    /**
+     * Academic subject matter the content relates to; define a list of values
+     * @param discipline
+     * @return
+     */
+    public ArticleModel withDiscipline(Collection<String> disciplines) {
+        super.put(articleDiscipline,disciplines);
+        return this;
+    }
+
+    /**
+     * Academic subject matter the content relates to; define a list of values
+     * @param discipline
+     * @return
+     */
+    public ArticleModel withDiscipline(String[] disciplines) {
+        super.put(articleDiscipline,disciplines);
+        return this;
+    }
     
     /**
      * Name of the source from which the reference was imported
@@ -114,12 +137,52 @@ public class ArticleModel extends EventModel {
     }
     
     /**
+     * Name of the source from which the reference was imported; define a list of values
+     * @param source
+     * @return
+     */
+    public ArticleModel withReferenceSource(Collection<String> sources) {
+        super.put(articleReferenceSource,sources);
+        return this;
+    }
+    
+    /**
+     * Name of the source from which the reference was imported; define a list of values
+     * @param source
+     * @return
+     */
+    public ArticleModel withReferenceSource(String[] sources) {
+        super.put(articleReferenceSource,sources);
+        return this;
+    }
+    
+    /**
      * Name of category of grouping of reference sources
      * @param type
      * @return
      */
     public ArticleModel withReferenceSourceType(String type) {
         super.put(articleReferenceSourceType,type);
+        return this;
+    }
+    
+    /**
+     * Name of category of grouping of reference sources; define a list of values
+     * @param type
+     * @return
+     */
+    public ArticleModel withReferenceSourceType(Collection<String> types) {
+        super.put(articleReferenceSourceType,types);
+        return this;
+    }
+    
+    /**
+     * Name of category of grouping of reference sources; define a list of values
+     * @param type
+     * @return
+     */
+    public ArticleModel withReferenceSourceType(String[] types) {
+        super.put(articleReferenceSourceType,types);
         return this;
     }
     
@@ -144,11 +207,51 @@ public class ArticleModel extends EventModel {
     }
     
     /**
+     * Identification of the database the journal belongs to; define a list of values
+     * @param dbid
+     * @return
+     */
+    public ArticleModel withDBID(Collection<String> dbids) {
+        super.put(articleDBID,dbids);
+        return this;
+    }
+    
+    /**
+     * Identification of the database the journal belongs to; define a list of values
+     * @param dbid
+     * @return
+     */
+    public ArticleModel withDBID(String[] dbids) {
+        super.put(articleDBID,dbids);
+        return this;
+    }
+    
+    /**
      * When applicable: ISSN if the article is published in a periodical
      * @param issn
      * @return
      */
     public ArticleModel withISSN(String issn) {
+        super.put(articleISSN,issn);
+        return this;
+    }
+    
+    /**
+     * When applicable: ISSN if the article is published in a periodical; define a list of values
+     * @param issn
+     * @return
+     */
+    public ArticleModel withISSN(Collection<String> issn) {
+        super.put(articleISSN,issn);
+        return this;
+    }
+    
+    /**
+     * When applicable: ISSN if the article is published in a periodical; define a list of values
+     * @param issn
+     * @return
+     */
+    public ArticleModel withISSN(String[] issn) {
         super.put(articleISSN,issn);
         return this;
     }
@@ -164,11 +267,51 @@ public class ArticleModel extends EventModel {
     }
     
     /**
+     * When applicable: ISBN if the article is published in a book; define a list of values
+     * @param isbn
+     * @return
+     */
+    public ArticleModel withISBN(List<String> isbn) {
+        super.put(articleISBN,isbn);
+        return this;
+    }
+
+    /**
+     * When applicable: ISBN if the article is published in a book; define a list of values
+     * @param isbn
+     * @return
+     */
+    public ArticleModel withISBN(String[] isbn) {
+        super.put(articleISBN,isbn);
+        return this;
+    }
+    
+    /**
      * When applicable: Digital Object Identifier of the article
      * @param doi
      * @return
      */
     public ArticleModel withDOI(String doi) {
+        super.put(articleDOI,doi);
+        return this;
+    }
+    
+    /**
+     * When applicable: Digital Object Identifier of the article; define a list of values
+     * @param doi
+     * @return
+     */
+    public ArticleModel withDOI(Collection<String> doi) {
+        super.put(articleDOI,doi);
+        return this;
+    }
+    
+    /**
+     * When applicable: Digital Object Identifier of the article; define a list of values
+     * @param doi
+     * @return
+     */
+    public ArticleModel withDOI(String[] doi) {
         super.put(articleDOI,doi);
         return this;
     }
