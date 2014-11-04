@@ -2,6 +2,8 @@ package com.squid.events.model;
 
 import java.util.Collection;
 
+import com.squid.events.commons.StringUtils;
+
 /**
  * Properties to track search events. It extends from the Account model.
  * @author sergefantino
@@ -71,6 +73,16 @@ public class SearchModel extends AccountModel {
      */
     public SearchModel withTerms(String terms) {
         super.put(SearchTerms, terms);
+        return this;
+    }
+    
+    /**
+     * Search term entered by the user
+     * @param terms
+     * @return
+     */
+    public SearchModel withTerms(Collection<String> terms) {
+        super.put(SearchTerms, StringUtils.listToString(terms, "", " ", ""));
         return this;
     }
     

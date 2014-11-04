@@ -235,14 +235,30 @@ public class EventPublisher {
             String data = Base64.printBase64Binary(raw);
             String signature = Signature.calculateRFC2104HMAC(data,
                     config.getSecretKey());
-            int response = doPost(serviceURL, config.getAppKey(),
-                    "event-retrieval-1.0", signature, data);
-            logger.info("sent "+events.size()+" events to API server");
-            logger.info("API server replied with " + response);
-            if (response==202) {
-                pushSuccess.addAndGet(events.size());
-            } else {
-                pushFailed.addAndGet(events.size());
+            int retry = 0;
+            while (retry<3) {
+                int response = doPost(serviceURL, config.getAppKey(),
+                        "event-retrieval-1.0", signature, data);
+                logger.info("sent "+events.size()+" events to API server");
+                logger.info("API server replied with " + response);
+                if (response==202) {
+                    pushSuccess.addAndGet(events.size());
+                    break;// exit from retry loop
+                } else {
+                    if (response==502) {
+                        // retry
+                        if (retry++<3) {
+                            // ok, retry
+                            logger.info("Retrying x" + retry);
+                        } else {
+                            pushFailed.addAndGet(events.size());
+                            break;// exit from retry loop
+                        }
+                    } else {
+                        pushFailed.addAndGet(events.size());
+                        break;// exit from retry loop
+                    }
+                }
             }
         } catch (JsonProcessingException e) {
             // too bad
