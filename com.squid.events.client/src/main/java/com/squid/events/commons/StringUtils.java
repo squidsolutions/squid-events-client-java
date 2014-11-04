@@ -9,6 +9,11 @@ import java.util.Collection;
  */
 public class StringUtils {
 
+
+    public static String listToString(Collection<?> members, String prepend, String delimiter, String append) {
+        return listToString(members, prepend, delimiter, append, null);
+    }
+    
     /**
      * format a list of string into a plain string of the form <prepend>item1<delimiter>item2<delimiter>...<delimiter>itemN<append>
      * @param members
@@ -17,30 +22,35 @@ public class StringUtils {
      * @param append
      * @return
      */
-    public static String listToString(Collection<String> members, String prepend, String delimiter, String append) {
+    public static String listToString(Collection<?> members, String prepend, String delimiter, String append, String quote) {
         StringBuilder s = new StringBuilder();
+        boolean first = true;
         s.append(prepend);
-        for (String m : members) {
-            s.append("'");
-            s.append(m);
-            s.append("'");
-            s.append(delimiter);
+        for (Object m : members) {
+            if (!first) s.append(delimiter); else first=false;
+            if (quote!=null) s.append(quote);
+            s.append(m.toString());
+            if (quote!=null) s.append(quote);
         }
-        s.replace(s.length() - delimiter.length(), s.length(), "");
         s.append(append);
         return s.toString();
     }
 
-    public static String listToString(String[] members, String prepend, String delimiter, String append) {
+
+    public static String listToString(Object[] members, String prepend, String delimiter, String append) {
+        return listToString(members, prepend, delimiter, append, null);
+    }
+    
+    public static String listToString(Object[] members, String prepend, String delimiter, String append, String quote) {
         StringBuilder s = new StringBuilder();
+        boolean first = true;
         s.append(prepend);
-        for (String m : members) {
-            s.append("'");
+        for (Object m : members) {
+            if (!first) s.append(delimiter); else first=false;
+            if (quote!=null) s.append(quote);
             s.append(m);
-            s.append("'");
-            s.append(delimiter);
+            if (quote!=null) s.append(quote);
         }
-        s.replace(s.length() - delimiter.length(), s.length(), "");
         s.append(append);
         return s.toString();
     }
