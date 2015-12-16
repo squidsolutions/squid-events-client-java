@@ -1,7 +1,10 @@
 package com.squid.events.client;
 
+import java.util.HashMap;
+
 import com.squid.events.model.ArticleModel;
 import com.squid.events.model.EventModel;
+import com.squid.events.model.InteractionEvent;
 import com.squid.events.model.RetrievalEvent;
 import com.squid.events.model.SearchEvent;
 import com.squid.events.model.StartSessionEvent;
@@ -38,9 +41,9 @@ public class EventModelFactory {
             .withUserID ("Tom");
         return event;
     }
-    
+
     public ArticleModel createArticleModel() {
-        return 
+        return
             new ArticleModel()
             .withPublicationTitle("Advances in Database Technology — EDBT'98")
             .withReferenceSource("scopus")
@@ -52,7 +55,7 @@ public class EventModelFactory {
             .withISSN("0302-9743")
             .withDBID("springer");
     }
-        
+
     public EventModel createRetrievalEvent() {
         EventModel event = new RetrievalEvent ()
             .withContentOwnerID("parentUniversity")
@@ -69,5 +72,29 @@ public class EventModelFactory {
             .withUserID ("Tom");
         return event;
     }
-    
+
+    public EventModel createInteractionEvent() {
+        EventModel event = new InteractionEvent ()
+        .withContentId("12345")
+        .withContentType("reference")
+        .withActionType("add")
+        .withContentId("123456")
+        .withContentType("journal")
+        .withInteractionContext(new HashMap<String, Object>(){
+            private static final long serialVersionUID = 7189104737271245194L;
+        {
+            put("a","b");
+            put ("c", 1);
+        }})
+
+            .withAccountID ("myUniversity")
+            .withAuthenticationMethod ("IPRANGE")
+            .withReferrerURL ("http://google.com")
+            .withHttpReturnCode (202)
+            .withPageViewURL ("http://myDomain.com/landing_page.html")
+            .withSessionID ("1234")
+            .withUserID ("Tom");
+        return event;
+    }
+
 }
